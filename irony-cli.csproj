@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>irony-cli</AssemblyName>
+    <AssemblyTitle>IronyModManager</AssemblyTitle>
+    <RootNamespace>IronyCli</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <IronyRuntime>$(MSBuildThisFileDirectory)..\irony-runtime</IronyRuntime>
+    <AssemblySearchPaths>$(AssemblySearchPaths);$(IronyRuntime)</AssemblySearchPaths>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="README.md">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <Content Include="*.cs;irony-cli.csproj;nuget.config;test_cli.py">
+      <Link>source\%(Filename)%(Extension)</Link>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!-- Use signed release backend binaries, never the desktop/Common/Platform assemblies. -->
+    <Reference Include="$(IronyRuntime)\IronyModManager.DI.dll;$(IronyRuntime)\IronyModManager.IO*.dll;$(IronyRuntime)\IronyModManager.Localization.dll;$(IronyRuntime)\IronyModManager.Models*.dll;$(IronyRuntime)\IronyModManager.Parser*.dll;$(IronyRuntime)\IronyModManager.Services*.dll;$(IronyRuntime)\IronyModManager.Shared.dll;$(IronyRuntime)\IronyModManager.Storage*.dll;$(IronyRuntime)\AutoMapper.dll;$(IronyRuntime)\SimpleInjector*.dll">
+      <Private>true</Private>
+    </Reference>
+    <!-- Microsoft.Data.Sqlite loads its batteries/provider assemblies dynamically. -->
+    <Reference Include="$(IronyRuntime)\SQLitePCLRaw.*.dll">
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="$(IronyRuntime)\Microsoft.Data.Sqlite.dll">
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="$(IronyRuntime)\System.Linq.Async*.dll">
+      <Private>true</Private>
+    </Reference>
+    <!-- The release ships v8 runtime files but backend dependencies reference v9. -->
+    <PackageReference Include="System.Text.Json" Version="9.0.22" />
+    <PackageReference Include="System.Collections.Immutable" Version="9.0.22" />
+    <Content Include="$(IronyRuntime)\Localization\*.json">
+      <Link>Localization\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="$(IronyRuntime)\Maps\**\*">
+      <Link>Maps\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="$(IronyRuntime)\Databases\**\*">
+      <Link>Databases\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="$(IronyRuntime)\e_sqlite3.dll;$(IronyRuntime)\Magick.Native-Q8-x64.dll;$(IronyRuntime)\LICENSE;$(IronyRuntime)\Credits.txt">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

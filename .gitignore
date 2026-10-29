@@ -1,0 +1,8 @@
+bin/
+obj/
+__pycache__/
+.vs/
+*.user
+*.zip
+Database_*.json*
+cli-backups/
